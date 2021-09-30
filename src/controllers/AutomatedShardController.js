@@ -50,10 +50,26 @@ class AutomatedShardController extends ShardController {
                         _id: { $substr: [`$${versionKey}`, 0, 4] },
                         count: { $sum: 1 }
                     }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        counts: {
+                            $push: {
+                                k: "$_id",
+                                v: "$count"
+                            }
+                        }
+                    }
+                },
+                {
+                    $replaceRoot: {
+                        newRoot: { $arrayToObject: "$counts" }
+                    }
                 }
             ]
             )
-            return result;
+            return result.length > 0 ? result[0] : "";
         }
         return [];
     }
@@ -73,10 +89,26 @@ class AutomatedShardController extends ShardController {
                         _id: { $substr: [`$${versionKey}`, 4, 2] },
                         count: { $sum: 1 }
                     }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        counts: {
+                            $push: {
+                                k: "$_id",
+                                v: "$count"
+                            }
+                        }
+                    }
+                },
+                {
+                    $replaceRoot: {
+                        newRoot: { $arrayToObject: "$counts" }
+                    }
                 }
             ]
             )
-            return result;
+            return result.length > 0 ? result[0] : "";
         }
         return [];
     }
@@ -96,18 +128,32 @@ class AutomatedShardController extends ShardController {
                         _id: { $substr: [`$${versionKey}`, 6, 2] },
                         count: { $sum: 1 }
                     }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        counts: {
+                            $push: {
+                                k: "$_id",
+                                v: "$count"
+                            }
+                        }
+                    }
+                },
+                {
+                    $replaceRoot: {
+                        newRoot: { $arrayToObject: "$counts" }
+                    }
                 }
             ]
             )
-            return result;
+            return result.length > 0 ? result[0] : "";
         }
-        return []
+        return ""
     }
 
     async getVersions(identifier, date, res) {
-        const year = date.slice(0, 4);
         const month = date.slice(4, 6);
-        const day = date.slice(6, 8);
         if (parseInt(month) > 12 || parseInt(month) < 1) {
             res.status(400).json("wrong format")
             return;
@@ -121,7 +167,7 @@ class AutomatedShardController extends ShardController {
             const results = result.map(edge => edge[versionKey])
             return results.join(',');
         }
-        return [];
+        return "";
     }
 
 

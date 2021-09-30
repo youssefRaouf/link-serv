@@ -27,10 +27,10 @@ export const parseGraphOutput = (nodes, edges) => {
     dayjs.extend(utc);
     let result = "";
     nodes.forEach((node, i) => {
-        result = result + `{"an": {${node._id}: {"identifier": ${node[urlKey]}, "TYPE": ${node.timestamp ? "VersionNode" : "Node"} ${node.timestamp ? `,timestamp:${dayjs.utc(node.timestamp).format("YYYYMMDDHHmmss")}` : ''}}}}\n`
+        result = result + `{"an": {${node._id}: {${process.env.IDENTIFIER}: ${node[urlKey]}, ${process.env.TYPE}: ${node.timestamp ? "VersionNode" : "Node"} ${node.timestamp ? `,${process.env.TIMESTAMP}:${dayjs.utc(node.timestamp).format("YYYYMMDDHHmmss")}` : ''}}}}\n`
     });
     edges.forEach(edge => {
-        result = result + `{"ae": {${edge.edgeId}: {"target": ${edge.targetId}, "directed": "true", "source": ${edge.sourceId}}}}\n`
+        result = result + `{"ae": {${edge.edgeId}: {${process.env.TARGET}: ${edge.targetId}, ${process.env.DIRECTED}: "true", ${process.env.SOURCE}: ${edge.sourceId}}}}\n`
     });
     return result;
 }

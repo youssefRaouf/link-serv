@@ -29,7 +29,8 @@ class DataController {
             const target = sources[edge.target];
             edgePromises.push(shard.insertEdge(source.id, target.id, source.timestamp));
         })
-        return Promise.allSettled(edgePromises);
+        const res = (await Promise.allSettled(edgePromises)).filter((e) => e.status !== "rejected" && e.reason.codeName === "DuplicateKey");
+        return res
     }
 
     async getGraph(identifier, timestamp, depth = 1, timeElasticity) {

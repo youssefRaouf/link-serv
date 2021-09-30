@@ -54,8 +54,16 @@ class ShardController {
         const response = await Node.find({ _id: { $in: nodes } }).exec();
         const result = []
         for (const node of response) {
-            const edge = await edges[0].edge.findOne({ [versionKey]: version, [fromKey]: node._id + "" }).exec();
-            result.push({ ...node._doc, timestamp: edge && edge[versionKey] })
+            const edge = await edges[0].edge.find({ [versionKey]: version, [fromKey]: node._id + "" }).exec();
+            if (edge.length > 1) {
+                edge.forEach((e, i) => {
+                    result.push({ ...node._doc, timestamp: e && e[versionKey] })
+                })
+            } else if (edge.length === 1) {
+                result.push({ ...node._doc, timestamp: edge[0] && edge[0][versionKey] })
+            } else {
+                result.push(node._doc)
+            }
         }
         return result;
     }
