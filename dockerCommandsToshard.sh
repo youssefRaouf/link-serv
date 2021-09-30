@@ -18,10 +18,10 @@ docker exec -it mongos51 bash -c "echo 'sh.addShard(\"shard01/mongodb11\")' | mo
 
 docker exec -it mongos51 bash -c "echo 'sh.addShard(\"shard02/mongodb21\")' | mongo "
 
-docker exec -it mongodb11 bash -c "echo 'use testDb' | mongo"
+docker exec -it mongodb11 bash -c "echo 'use link-serv' | mongo"
 
-docker exec -it mongos51 bash -c "echo 'sh.enableSharding(\"testDb\")' | mongo "
+docker exec -it mongos51 bash -c "echo 'sh.enableSharding(\"link-serv\")' | mongo "
 
-docker exec -it mongos51 bash -c "echo 'db.adminCommand( { "shardCollection": "\"testDb.edges"\", key: { from: "\"hashed"\" } } )' | mongo "
+docker exec -it mongos51 bash -c "echo 'db.adminCommand( { "shardCollection": "\"link-serv.edges"\", key: { from: "\"hashed"\" } } )' | mongo "
 
-docker exec -it mongos51 bash -c "echo 'db.adminCommand( { "shardCollection": "\"testDb.nodes"\", key: { url: "\"hashed"\" } } )' | mongo "
+docker exec -it mongos51 bash -c "echo 'db.adminCommand( { "shardCollection": "\"link-serv.nodes"\", key: { url: "\"hashed"\" } } )' | mongo "
